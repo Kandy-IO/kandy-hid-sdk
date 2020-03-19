@@ -15,7 +15,6 @@ The Kandy HID SDK currently supports the following Jabra headsets, with support 
 |   Jabra Engage 50   | &#9745; | &#9745; |     1.24.0      |
 |   Jabra Speak 710   | &#9745; | &#9745; |     1.28.0      |
 
-
 ## Installation
 
 Add the tgz file to your workspace and to your package.json. See more details in [CHANGELOG](./CHANGELOG.md).<br>
@@ -95,16 +94,6 @@ const hidMode = (yourEnvironment === 'Citrix') ? 'VDI': 'desktop';
 
 initializeHIDDevices(hidMode);
 ```
-
-#### Startup actions:
-
-##### Desktop
-
-Calls updateSupportedDevices() to scan for connected devices
-
-##### VDI
-
-Opens the virtual channel and starts listening for events / data coming from the Thin Client
 
 ### storeMainWindowID(id)
 
@@ -455,7 +444,7 @@ ipcRenderer.on('HIDFunctionRequest', (event, operation) => {
 
 ### Channel Error
 
-In VDI mode, if communication between kandy-hid software running within the Electron app and the kandy-hid DLL running on the Thin Client is lost for any reason over the virtual communication channel, kandy-hid will raise a "`channel_error`" on the `HIDFunctionRequest` event.
+In VDI mode, if communication between kandy-hid software running within the Electron app and the Kandy HID Driver for VDI running on the Thin Client is lost for any reason over the virtual communication channel, kandy-hid will raise a "`channel_error`" on the `HIDFunctionRequest` event.
 
 The channel will remain down and not automatically attempt to reconnect. Once your app chooses to reestablish communication, reissue `initializeHIDDevices()` (`mode` -- 'desktop vs 'VDI' is not required in this case), followed by all necessary `selectHIDDevice`'s.
 
@@ -475,7 +464,21 @@ ipcRenderer.on('HIDFunctionRequest', (event, operation) => {
 - Many of the complex, multi-call scenarios documented in Jabra User Manuals are not currently handled. Handling of some of these scenarios are being tracked as future work items, for example: answering an incoming call while on an active call or using the HID device to switch between an active call and a held call. Users should be warned to avoid these use cases. Rejecting an incoming call while on an active call is supported as of January 2020
 - Going offhook on a Jabra PRO 9450, Engage 65 or Speak 710 may not cause 'call_start' to be sent up to the app due to non-deterministic behaviour of these devices in this scenario. Support tickets (272, 277) have been created with the device vendor
 - The Jabra Speak 710 cannot currently be used on a Mac in Desktop mode. A support ticket (299) has been created with the device vendor
-- In VDI, the Jabra Speak 710 is known to conflict with either the mouse or keyboard when offhook. A support ticket (299) has been created with the device vendor
+- In VDI, the Jabra Speak 710 is known to conflict with either the mouse or keyboard when offhook. The issue has been addressed by the vendor in the RP6 / 64-bit version of the eLux OS image. There are no plans to address it in the RP5 / 32-bit version.
+
+## Backwards Compatibility
+
+When used in a Citrix VDI environment, this SDK is backwards-compatible with the most recent and one (1) previous version of Kandy HID Driver for VDI (DLL) (official releases only). This is intended to allow Kandy HID Driver for VDI upgrades on the Thin Client installed-base to lag behind application updates.
+
+### Example:
+#### Note these are fictional release values for purposes of illustration only; see the [compatibility matrix](./docs/compatibility.md) for actual Kandy HID Driver for VDI and Kandy HID SDK version compatibility information.
+
+| Kandy HID Driver for VDI Version  | Kandy HID SDK Version |                  Explanation                      |
+| :-------------------------------: | :-------------------: | :------------------------------------------------ |
+| 1.0                               | 1.0                   | Initial release                                   |
+| -                                 | 1.1                   | <ul><li>the Kandy HID SDK is updated</li><li>the Kandy HID Driver for VDI is not updated</li></ul> |
+| 1.2                               | 1.2                   | <ul><li>the Kandy HID SDK is updated</li><li>the Kandy HID Driver for VDI is also updated</li><li>version 1.2 of the Kandy HID SDK is compatible with Kandy HID Driver for VDI versions 1.0 and 1.2</li></ul> |
+| 1.3                               | 1.3                   | <ul><li>the Kandy HID SDK is updated</li><li>the Kandy HID Driver for VDI is also updated</li><li>version 1.3 of the Kandy HID SDK is compatible with Kandy HID Driver for VDI versions 1.2 and 1.3</li></ul> |
 
 ## CHANGELOG
 
