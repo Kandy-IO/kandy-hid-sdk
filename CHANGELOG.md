@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 1.5.0 - 2020-05-15
+
+### Added
+- The ability to answer a call from a HID device while it is already active on a call
+- The ability to swap between an active and held call from a HID device
+
+### Fixed
+- In Desktop (non-Citrix/VDI), device loss (disconnect / power loss) detection and handling has been improved
+
 ## 1.4.0 - 2020-03-20
 
 ### Added
@@ -17,7 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - In Desktop, the ability to use the Jabra Evolve 80 and Jabra Speak 750 has been added <sup>1</sup>
 - The ability to hold/resume an active call from a HID device is added for VDI mode (it was previously supported only for Desktop) <sup>2</sup>
 - The ability to reject an incoming call from a HID device while on an active call is added <sup>2</sup>
-- a new API is introduced - `isSupportedDevice()`; see usage details in [README](./README.md)
+- A new API is introduced - `isSupportedDevice()`; see usage details in [README](./README.md)
 
 1- **NOTE that formal support is limited to the devices listed in the table in the [README](./README.md)**. Other devices (including the Speak 710 and Evolve 80) should be considered unsupported and used on a trial / evaluation basis only.<br>
 2- The way that these features are invoked by the user aligns to each Jabra device's User Manual. See Use Cases in the README for details<br>

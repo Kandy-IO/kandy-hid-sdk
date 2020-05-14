@@ -230,9 +230,12 @@ Options:
 'offhook': Instructs the HID device to go offhook.
 'onhook': Instructs the HID device to go onhook.
 'reset': Resets the device to default state.
+'calls_on_hold': Takes a true/false parameter. Informs kandy-hid when calls are put on hold in the app (1)
 ```
 
 The above are instructions from your app to kandy-hid, requesting that the HID device enter a certain state or perform a specific state change.
+
+<sup>1</sup> See details regarding 'calls_on_hold' in [call swap documentation](./docs/swap.md)
 
 ### HIDFunctionRequest(operation)
 
@@ -251,7 +254,7 @@ ipcRenderer.on('HIDFunctionRequest', (event, operation) => {
     case 'call_mute':
       // mute an active call in your app
       break;
-    ...
+      ...
 });
 ```
 
@@ -269,15 +272,18 @@ Options:
 'call_unmute': an active muted call has been unmuted on the HID device
 'call_hold': an active call has been put on hold from the device
 'call_resume': a held call has been taken off of hold from the device
+'call_swap': the user has indicated the desire to swap between an active and a held call (1)
 'device_error': (VDI only) kandy-hid has detected a previously connected device has been disconnected (power loss or physical disconnection)
 'channel_error': (VDI only) kandy-hid has detected a loss of communication with the Thin Client
 ```
 
-**IMPORTANT** you'll notice that the list of operations sent up to your app as a result of someone having taken an action on the device are a subset of the the operations your app sends to kandy-hid to perform device actions (via `invokeHIDFunction`). That is not coincidental!
+**IMPORTANT** you'll notice that the list of operations sent up to your app as a result of someone having taken an action on the device (with the exception of 'call_swap' <sup>1</sup>) are a subset of the the operations your app sends to kandy-hid to perform device actions (via `invokeHIDFunction`). That is not coincidental!
 
-When kandy-hid notifies your app of a status change, it's important that you take whatever actions are necessary in your app (i.e. invoke your mute function), but also **replay the operation back to kandy-hid to update its state**
+When kandy-hid notifies your app of a status change, it's important that you take whatever actions are necessary in your app (i.e. invoke your mute function), but also **replay the operation back to kandy-hid to update the device's state**<sup>1</sup>.
 
-This may seem strange, but only one software entity can be in charge, and it's your app, not kandy-hid. This is required to keep your app, kandy-hid and the device itself in sync.
+This may seem strange, but only one software entity can be in charge, and it's your app, not kandy-hid. This is required to keep your app, kandy-hid and the device itself in sync. When a user presses the mute button on a HID device, nothing happens until your app instructs the device to mute via kandy-hid.
+
+<sup>1</sup> Do not replay the 'call_swap' operation back to kandy-hid; instead, your app should send 'call_hold' followed by 'call_resume'. See details regarding 'call_swap' in [call swap documentation](./docs/swap.md).
 
 ### readyToExit()
 
@@ -339,6 +345,7 @@ See the complete list of things that can be imported into your app [here](./docs
 - Ending a call: sending 'call_end' to the device will cause the device to hang up.
 - Muting / unmuting an active call: sending 'call_mute' / 'call_unmute' will cause the device to perform the requested operation.
 - Holding / resuming a call: sending 'call_hold' / 'call_resume' will cause the device to perform the requested operation.
+- Performing a call swap: when preconditions are met, sending a 'call_hold' followed immediately by 'call_resume' will cause the device to perform swap between active and held calls. See [call swap documentation](./docs/swap.md).
 
 ### Actions performed on the device:
 
@@ -352,11 +359,13 @@ See the complete list of things that can be imported into your app [here](./docs
 
 The answer action will be passed up to the app as a 'call_accept' operation on the HIDFunctionRequest event.
 
+**In order to answer an incoming call while the device is already active on a call, the device's call hold/resume action must be performed. See Hold/Resume below.**
+
 #### Originating an outgoing call
 
 - If the device goes off hook using any of the methods described previously, it will send a 'call_start' operation on the HIDFunctionRequest event. It's then up to your app to take the appropriate action to start a call. If your app cannot successfully start a call in that case, you should send 'call_failure', followed by 'call_failure_finish' 1 second later to return the device to default state (since it will be in the offhook state).
 
-**NOTE that the Engage 65 and PRO 9450 base must be in "Soft Phone Mode prior to going offhook**. This can be accomplished by removing the headset from the base and pressing the MultiFunction button or the green Call Answer button for 1 second. See the Engage 65 User Manual for details.
+**NOTE that the Engage 65 and PRO 9450 base must be in "Soft Phone Mode" prior to going offhook**. This can be accomplished by removing the headset from the base and pressing the MultiFunction button or the Call Answer button for 1 second. See device User Manuals for more details.
 
 ```
 ipcRenderer.on('HIDFunctionRequest', (event, operation) => {
@@ -421,6 +430,9 @@ Rejecting an incoming call can be accomplished by:
 ##### Jabra Speak 710
 - pressing the red Call End button on the base
 
+#### Call Swap
+- When preconditions are met, performing a 'call_hold' action on the device (see above) will signal the controlling application to swap between the active and a held call. See [call swap documentation](./docs/swap.md).
+
 ## Error Handling
 
 Most errors are handled gracefully within kandy-hid - device connection, disconnection, power off, etc. Keep an eye on logs.
@@ -461,10 +473,11 @@ ipcRenderer.on('HIDFunctionRequest', (event, operation) => {
 ## Known Issues / Limitations
 
 - The same device must be selected as active microphone, speakers and alert speakers via `selectHIDDevice()`
-- Many of the complex, multi-call scenarios documented in Jabra User Manuals are not currently handled. Handling of some of these scenarios are being tracked as future work items, for example: answering an incoming call while on an active call or using the HID device to switch between an active call and a held call. Users should be warned to avoid these use cases. Rejecting an incoming call while on an active call is supported as of January 2020
 - Going offhook on a Jabra PRO 9450, Engage 65 or Speak 710 may not cause 'call_start' to be sent up to the app due to non-deterministic behaviour of these devices in this scenario. Support tickets (272, 277) have been created with the device vendor
 - The Jabra Speak 710 cannot currently be used on a Mac in Desktop mode. A support ticket (299) has been created with the device vendor
 - In VDI, the Jabra Speak 710 is known to conflict with either the mouse or keyboard when offhook. The issue has been addressed by the vendor in the RP6 / 64-bit version of the eLux OS image. There are no plans to address it in the RP5 / 32-bit version.
+- When performing complex / multi-call operations such as call swapping, device mute state may get out of sync with the application. The out-of-sync condition can always be resolved by performing a mute or unmute action in the application. An enhancement will be delivered in an upcoming release to improve this behaviour.
+- See limitations relating to use of older versions of Kandy HID Driver for VDI in [compatibility documentation](./docs/compatibility.md).
 
 ## Backwards Compatibility
 
