@@ -6,24 +6,26 @@ import { CONSTANTS } from '@distant/kandy-hid/constants/constants';
 ```
 CONSTANTS: {
     "DEVICE_OPERATIONS": {
-        "RESET": "reset",
-        "DEVICE_ERROR": "error",
-        "DEVICE_CLOSE": "close",
-        "CHANNEL_ERROR": "channel_error",
-        "CALL_MUTE": "call_mute",
-        "CALL_UNMUTE": "call_unmute",
-        "START_RINGING": "start_ringing",
-        "STOP_RINGING": "stop_ringing",
-        "CALL_HOLD": "call_hold",
-        "CALL_RESUME": "call_resume",
         "CALL_ACCEPT": "call_accept",
-        "CALL_START": "call_start",
-        "CALL_REJECT": "call_reject",
         "CALL_END": "call_end",
-        "CALL_FAILURE": "call_failure",
         "CALL_FAILURE_FINISH": "call_failure_finish",
+        "CALL_FAILURE": "call_failure",
+        "CALL_HOLD": "call_hold",
+        "CALL_MUTE": "call_mute",
+        "CALL_REJECT": "call_reject",
+        "CALL_RESUME": "call_resume",
+        "CALL_START": "call_start",
+        "CALL_SWAP": "call_swap",
+        "CALL_UNMUTE": "call_unmute",
+        "CALLS_ON_HOLD": "calls_on_hold",
+        "CHANNEL_ERROR": "channel_error",
+        "DEVICE_CLOSE": "close",
+        "DEVICE_ERROR": "error",
         "OFFHOOK": "offhook",
-        "ONHOOK": "onhook"
+        "ONHOOK": "onhook",
+        "RESET": "reset",
+        "START_RINGING": "start_ringing",
+        "STOP_RINGING": "stop_ringing"
     },
     "DEVICE_TYPES": {
         "MICROPHONE": "microphone",
@@ -36,9 +38,10 @@ CONSTANTS: {
     },
     "ACTIONS": {
         "ALLOW_HID_DEVICE_OPENS": "allowHIDDeviceOpens",
-        "UPDATE_SUPPORTED_DEVICES": "updateSupportedDevices",
+        "INVOKE_HID_FUNCTION": "invokeHIDFunction",
+        "IS_SUPPORTED_DEVICE": "isSupportedDevice",
         "SELECT_HID_DEVICE": "selectHIDDevice",
-        "INVOKE_HID_FUNCTION": "invokeHIDFunction"
+        "UPDATE_SUPPORTED_DEVICES": "updateSupportedDevices"
     }
 }
 ```
