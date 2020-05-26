@@ -478,6 +478,7 @@ ipcRenderer.on('HIDFunctionRequest', (event, operation) => {
 - In VDI, the Jabra Speak 710 is known to conflict with either the mouse or keyboard when offhook. The issue has been addressed by the vendor in the RP6 / 64-bit version of the eLux OS image. There are no plans to address it in the RP5 / 32-bit version.
 - When performing complex / multi-call operations such as call swapping, device mute state may get out of sync with the application. The out-of-sync condition can always be resolved by performing a mute or unmute action in the application. An enhancement will be delivered in an upcoming release to improve this behaviour.
 - See limitations relating to use of older versions of Kandy HID Driver for VDI in [compatibility documentation](./docs/compatibility.md).
+- If the app developer does not make changes to constantly send 'calls_on_hold' true/false as described in [call swap documentation](./docs/swap.md), after holding, resuming and then ending a call, the device will be left in a hold state. This issue will be addressed in the next release. As a temporary workaround, when sending a 'call_resume' (`invokeHIDFunction('call_resume')`), also send `invokeHIDFunction('calls_on_hold', false)` in order to clear the hold condition.
 
 ## Backwards Compatibility
 
