@@ -126,7 +126,7 @@ Parameters: `none`<br><br>
 
 Updates kandy-hid's internal list of connected devices.
 
-In Desktop, the list of devices found is filtered based on known supported devices (whitelisting). 
+In Desktop, the list of devices found is filtered based on known supported devices (an "allow-list").
 In VDI, the list of connected devices comes from the Thin Client, and is not filtered.
 
 #### NOTE
