@@ -8,18 +8,19 @@ The Kandy HID SDK abstracts HID device functions to the application developer in
 
 The Kandy HID SDK currently supports the following Jabra headsets, with support for HID devices from other vendors possible.<br>
 
-| Device Make / Model | Desktop |   VDI   |    Firmware     |
-| :-----------------: | :-----: | :-----: | :-------------: |
-|   Jabra PRO 9450    | &#9745; | &#9745; |     3.19.2      |
-|   Jabra Engage 65   | &#9745; | &#9745; | 2.0.5 and 3.4.1 |
-|   Jabra Engage 50   | &#9745; | &#9745; |     1.24.0      |
-|   Jabra Speak 710   | &#9745; | &#9745; |     1.28.0      |
+| Device Make / Model | Desktop |   VDI eLux  |   VDI Windows   |   Firmware    |
+| :-----------------: | :-----: | :---------: | :-------------: | :-----------: |
+|   Jabra PRO 9450    | &#9745; |   &#9745;   |     &#9745;     |     3.19.2    |
+|   Jabra Engage 65   | &#9745; |   &#9745;   |     &#9745;     | 2.0.5, 3.4.1  |
+|   Jabra Engage 50   | &#9745; |   &#9745;   |     &#9745;     | 1.24.0, 2.3.1 |
+|   Jabra Speak 710   | &#9745; |   &#9745;   |     &#9744;     |     1.28.0    |
+|   Jabra Speak 750   | &#9744; |   &#9744;   |     &#9745;     |     2.24.0    |
 
 ## Installation
 
 Add the tgz file to your workspace and to your package.json. See more details in [CHANGELOG](./CHANGELOG.md).<br>
 
-In order to use this SDK in a Citrix VDI environment, the [corresponding driver](https://github.com/Kandy-IO/kandy-hid-vdi) is also required.
+In order to use this SDK in a Citrix VDI eLux environment, the [corresponding driver](https://github.com/Kandy-IO/kandy-hid-vdi) is also required. No additional driver is required in a Citrix VDI Windows environment.
 
 ## Usage
 
@@ -120,18 +121,6 @@ const mainWindow = new BrowserWindow({
 storeMainWindowID(mainWindow.id);
 ```
 
-### updateSupportedDevices()
-
-Parameters: `none`<br><br>
-
-Updates kandy-hid's internal list of connected devices.
-
-In Desktop, the list of devices found is filtered based on known supported devices (an "allow-list").
-In VDI, the list of connected devices comes from the Thin Client, and is not filtered.
-
-#### NOTE
-It's no longer necessary to call updateSupportedDevices in your app. This API should be considered deprecated and will be removed in a future version. See CHANGELOG
-
 ### isSupportedDevice(label)
 
 Parameters
@@ -160,7 +149,7 @@ function maybeSelectMicrophone(deviceObject) {
 }
 ```
 
-This API will return true for supported devices listed in the introductory section, and for 'Jabra Speak 750' and 'Jabra Evolve 80'. It will return false for any other string.
+This API will return true for supported devices listed in the introductory section and for 'Jabra Evolve 80'. It will return false for any other string.
 
 Note that the device label passed in is compared against the device names as they appear in the introduction. The label must **contain** one of these names in order for this API to return true - it does not have to match exactly.
 
@@ -273,8 +262,8 @@ Options:
 'call_hold': an active call has been put on hold from the device
 'call_resume': a held call has been taken off of hold from the device
 'call_swap': the user has indicated the desire to swap between an active and a held call (1)
-'device_error': (VDI only) kandy-hid has detected a previously connected device has been disconnected (power loss or physical disconnection)
-'channel_error': (VDI only) kandy-hid has detected a loss of communication with the Thin Client
+'device_error': (VDI eLux only) kandy-hid has detected a previously connected device has been disconnected (power loss or physical disconnection)
+'channel_error': (VDI eLux only) kandy-hid has detected a loss of communication with the Thin Client
 ```
 
 **IMPORTANT** you'll notice that the list of operations sent up to your app as a result of someone having taken an action on the device (with the exception of 'call_swap' <sup>1</sup>) are a subset of the the operations your app sends to kandy-hid to perform device actions (via `invokeHIDFunction`). That is not coincidental!
@@ -320,11 +309,11 @@ Returns: `Promise`
 
 Performs kandy-hid cleanup actions in preparation for exit.
 
-##### Desktop
+##### Desktop and VDI Windows
 
 Closes handle(s) to open device(s)
 
-##### VDI
+##### VDI eLux
 
 Closes handle(s) to open device(s) attached to the client and closes the virtual channel. Since many actions in the VDI environment are asynchronous, this function returns a Promise (in both Desktop and VDI).
 
@@ -401,6 +390,7 @@ When the device is engaged in an active call, the call can be placed on hold or 
 ##### Jabra PRO 9450
 - pressing and holding the PC (call answer / end) button on the base for 1-2 seconds
 - pressing and holding the Multi-Function button on the headset for 1-2 seconds
+- see Known Issues / Limitations
 
 ##### Jabra Engage 65
 - pressing the green Call Answer button on the base
@@ -409,7 +399,7 @@ When the device is engaged in an active call, the call can be placed on hold or 
 ##### Jabra Engage 50
 - pressing and holding the Call Answer / End button on the base for 1-2 seconds
 
-##### Jabra Speak 710
+##### Jabra Speak 710/750
 - pressing the green Call Answer button on the base
 
 #### Call Reject
@@ -427,7 +417,7 @@ Rejecting an incoming call can be accomplished by:
 ##### Jabra Engage 50
 - double-clicking the Call Answer / End button on the base
 
-##### Jabra Speak 710
+##### Jabra Speak 710/750
 - pressing the red Call End button on the base
 
 #### Call Swap
@@ -441,7 +431,7 @@ It's natural during app development that you may put the device into a state tha
 
 ### Device Error
 
-In VDI mode (i.e. not desktop environment currently), if the device is powered off or disconnected from the Thin Client, kandy-hid will receive an error from the client, which will in turn be passed up to the app on the `HIDFunctionRequest` event as a 'device_error' operation. It's passed up to the app so you have the opportunity to alert the user or perform other actions.
+In VDI eLux mode, if the device is powered off or disconnected from the Thin Client, kandy-hid will receive an error from the client, which will in turn be passed up to the app on the `HIDFunctionRequest` event as a 'device_error' operation. It's passed up to the app so you have the opportunity to alert the user or perform other actions.
 
 ```
 ipcRenderer.on('HIDFunctionRequest', (event, operation) => {
@@ -456,7 +446,7 @@ ipcRenderer.on('HIDFunctionRequest', (event, operation) => {
 
 ### Channel Error
 
-In VDI mode, if communication between kandy-hid software running within the Electron app and the Kandy HID Driver for VDI running on the Thin Client is lost for any reason over the virtual communication channel, kandy-hid will raise a "`channel_error`" on the `HIDFunctionRequest` event.
+In VDI eLux mode, if communication between kandy-hid software running within the Electron app and the Kandy HID Driver for VDI running on the Thin Client is lost for any reason over the virtual communication channel, kandy-hid will raise a "`channel_error`" on the `HIDFunctionRequest` event.
 
 The channel will remain down and not automatically attempt to reconnect. Once your app chooses to reestablish communication, reissue `initializeHIDDevices()` (`mode` -- 'desktop vs 'VDI' is not required in this case), followed by all necessary `selectHIDDevice`'s.
 
@@ -472,17 +462,19 @@ ipcRenderer.on('HIDFunctionRequest', (event, operation) => {
 
 ## Known Issues / Limitations
 
-- The same device must be selected as active microphone, speakers and alert speakers via `selectHIDDevice()`
-- Going offhook on a Jabra PRO 9450, Engage 65 or Speak 710 may not cause 'call_start' to be sent up to the app due to non-deterministic behaviour of these devices in this scenario. Support tickets (272, 277) have been created with the device vendor
-- The Jabra Speak 710 cannot currently be used on a Mac in Desktop mode. A support ticket (299) has been created with the device vendor
-- In VDI, the Jabra Speak 710 is known to conflict with either the mouse or keyboard when offhook. The issue has been addressed by the vendor in the RP6 / 64-bit version of the eLux OS image. There are no plans to address it in the RP5 / 32-bit version.
+- The same device must be selected as active microphone, speakers and alert speakers via `selectHIDDevice()`.
+- Going offhook on a Jabra PRO 9450, Engage 65 or Speak 710/750 may not cause 'call_start' to be sent up to the app due to non-deterministic behaviour of these devices in this scenario. Support tickets (272, 277) have been created with the device vendor.
+- The Jabra Speak 710 and Speak 750 cannot currently be used on a Mac in Desktop mode. A support ticket (299) has been created with the device vendor
+- In VDI eLux, the Jabra Speak 710 is known to conflict with either the mouse or keyboard when offhook. The issue has been addressed by the vendor in the RP6 / 64-bit version of the eLux OS image. There are no plans to address it in the RP5 / 32-bit version.
 - When performing complex / multi-call operations such as call swapping, device mute state may get out of sync with the application. The out-of-sync condition can always be resolved by performing a mute or unmute action in the application. An enhancement will be delivered in an upcoming release to improve this behaviour.
 - See limitations relating to use of older versions of Kandy HID Driver for VDI in [compatibility documentation](./docs/compatibility.md).
 - If the app developer does not make changes to constantly send 'calls_on_hold' true/false as described in [call swap documentation](./docs/swap.md), after holding, resuming and then ending a call, the device will be left in a hold state. This issue will be addressed in the next release. As a temporary workaround, when sending a 'call_resume' (`invokeHIDFunction('call_resume')`), also send `invokeHIDFunction('calls_on_hold', false)` in order to clear the hold condition.
+- in VDI Windows, the LEDs on the Jabra Engage 50 may not be responsive if the device is not at factory default settings. If the Engage 50 LEDs are not changing state during call operations, reset the device using the latest available version of Jabra Direct. Note that kandy-hid always assumes devices are at factory default settings.
+- There is an issue affecting Hold/Resume functionality on the Jabra PRO 9450 (KAJ-588). Hold, resume and call swap functions should be avoided if the 9450 is being used. Affects Desktop and Windows VDI, not eLux VDI. This limitation will be addressed in a future update.
 
 ## Backwards Compatibility
 
-When used in a Citrix VDI environment, this SDK is backwards-compatible with the most recent and one (1) previous version of Kandy HID Driver for VDI (DLL) (official releases only). This is intended to allow Kandy HID Driver for VDI upgrades on the Thin Client installed-base to lag behind application updates.
+When used in a Citrix VDI eLux environment, this SDK is backwards-compatible with the most recent and one (1) previous version of Kandy HID Driver for VDI (DLL) (official releases only). This is intended to allow Kandy HID Driver for VDI upgrades on the Thin Client installed-base to lag behind application updates.
 
 ### Example:
 #### Note these are fictional release values for purposes of illustration only; see the [compatibility matrix](./docs/compatibility.md) for actual Kandy HID Driver for VDI and Kandy HID SDK version compatibility information.
@@ -493,6 +485,10 @@ When used in a Citrix VDI environment, this SDK is backwards-compatible with the
 | -                                 | 1.1                   | <ul><li>the Kandy HID SDK is updated</li><li>the Kandy HID Driver for VDI is not updated</li></ul> |
 | 1.2                               | 1.2                   | <ul><li>the Kandy HID SDK is updated</li><li>the Kandy HID Driver for VDI is also updated</li><li>version 1.2 of the Kandy HID SDK is compatible with Kandy HID Driver for VDI versions 1.0 and 1.2</li></ul> |
 | 1.3                               | 1.3                   | <ul><li>the Kandy HID SDK is updated</li><li>the Kandy HID Driver for VDI is also updated</li><li>version 1.3 of the Kandy HID SDK is compatible with Kandy HID Driver for VDI versions 1.2 and 1.3</li></ul> |
+
+## Windows VDI
+
+Using the kandy-hid SDK in a VDI Windows environment requires that HID devices be "split" and then the HID portion of the device be redrected to the Virtual Machine. See [Required Citrix configuration for VDI Windows](./docs/windows_vdi.md).
 
 ## CHANGELOG
 

@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 1.6.0 - 2021-01-29
+
+### Removed
+- The `updateSupportedDevices()` API, which was deprecated in version 1.3.1
+
+### Added
+- Ability to use the SDK in a Citrix VDI Windows environment
+- Formal support for the Jabra Speak 750 in a VDI Windows environment
+
 ## 1.5.0 - 2020-05-15
 
 ### Added
@@ -28,7 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The ability to reject an incoming call from a HID device while on an active call is added <sup>2</sup>
 - A new API is introduced - `isSupportedDevice()`; see usage details in [README](./README.md)
 
-1- **NOTE that formal support is limited to the devices listed in the table in the [README](./README.md)**. Other devices (including the Speak 710 and Evolve 80) should be considered unsupported and used on a trial / evaluation basis only.<br>
+1- **NOTE that formal support is limited to the devices listed in the table in the [README](./README.md)**. Other devices (including the Speak 750 and Evolve 80) should be considered unsupported and used on a trial / evaluation basis only.<br>
 2- The way that these features are invoked by the user aligns to each Jabra device's User Manual. See Use Cases in the README for details<br>
 
 ### Changed
