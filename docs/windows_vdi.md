@@ -1,6 +1,6 @@
 # Required Citrix configuration for VDI Windows
 
-Using the kandy-hid SDK in a VDI Windows environment requires that HID devices be "split" and then the HID portion of the device be redrected to the Virtual Machine. Citrix documentation refers to this as "USB Composite device redirection". Citrix's documentation for the Citrix Workspace app for Windows describes the configuration steps.
+Using the kandy-hid SDK in a VDI Windows environment requires that HID devices be "split" and then the HID portion of the device be redrected to the Virtual Machine. Citrix documentation refers to this as "Composite USB device redirection". Citrix's documentation for the Citrix Workspace app for Windows describes the configuration steps.
 
 What follows is a **reference**. For issues, questions, etc. please contact Citrix. 
 
