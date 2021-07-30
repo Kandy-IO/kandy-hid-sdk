@@ -15,7 +15,7 @@ The Kandy HID SDK currently supports the following Jabra headsets, with support 
 |   Jabra Speak 750   | &#9744; |   &#9744;   |     &#9745;     |     2.24.0    |
 |   Jabra Evolve2 40  | &#9744; |   &#9744;   |     &#9744;     |     1.19.0    |
 
-The README that follows contains instructions required to use the Kandy HID SDK in Electron's MAIN process. Refer to [the README for version 2.0](../README.MD) to use the SDK in the Renderer process, or if so instructed by AVCt.
+The README that follows contains instructions required to use the Kandy HID SDK in Electron's MAIN process. Refer to [the README for version 2.0](../README.md) to use the SDK in the Renderer process, or if so instructed by AVCt.
 
 ## Installation
 
