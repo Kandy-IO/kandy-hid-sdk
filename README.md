@@ -17,11 +17,11 @@ The Kandy HID SDK currently supports the following Jabra headsets and configurat
 
 <sup>* See Known Issues / Limitations</sup>
 
-Version 2.0.0 of this SDK introduces the use of WebHID technology, used initially in the VDI Mac configuration. Future versions of the Kandy Distant Driver for VDI SDK and this SDK will enable WebHID in other configurations listed above.
+Version 2.0.0 of this SDK introduces the use of WebHID technology, used initially in the VDI Mac configuration. Future versions of the Kandy VDI Toolkit and this SDK will enable WebHID in other configurations listed above.
 
 As of version 2.0.0, the Kandy HID SDK is to be used in Electron's Renderer process, rather than the Main process as in previous releases. There is still a requirement to `require` the SDK in Electron's Main Process to maintain backwards-compatibility for configurations where WebHID is not yet used. See Installation and `initializeHIDDevices` below.
 
-Refer to [the README for version 1.x](./docs/README.MD) for instructions on using previous versions of the SDK in Electron's main process.
+Refer to [the README for version 1.x](./docs/README_v1.MD) for instructions on using previous versions of the SDK in Electron's main process.
 
 ## Installation
 
@@ -62,7 +62,7 @@ The local library must then be initialized with an object containing keys `mode`
 Examples:
 
 #### Initializing the local instance for Desktop
-If your app is operating in a Desktop environment, you can call `initializeHIDDevices` as early as you like during your app's initialization. In this case, mode = 'desktop' and 'webHID' = false:
+If your app is operating in a Desktop environment, you can call `initializeHIDDevices` as early as you like during your app's initialization. In this case, mode = 'desktop' and `driverInfo` need not be included.
 
 ```
 const kandyHID = initializeHIDDevices({ mode: 'desktop' })
@@ -99,11 +99,11 @@ const driverInfo = ipcRenderer.sendSync('getDriverInfo')
 const kandyHID = initializeHIDDevices({ mode, driverInfo })
 ```
 #### Return value
-Regardless of mode (VDI or desktop), initializeHIDDevices returns an object that contains the following:
+Regardless of mode, `initializeHIDDevices` returns an object that contains the following:
 
 1- an event emitter
 
-This emitter emits 'HIDFunctionRequest' events, replacing ipcRenderer.on('HIDFunctionRequest', ...) in 1.x. See `HIDFunctionRequest` below.
+This emitter emits `HIDFunctionRequest` events, replacing ipcRenderer.on('HIDFunctionRequest', ...) in 1.x. See `HIDFunctionRequest` below.
 
 2- Functions `allowHIDDeviceOpens`, `invokeHIDFunction`, `isSupportedDevice`, `selectHIDDevice`, `setChannel`, `storeMainWindowID`, `setChannel`. See their usage below.
 
@@ -111,7 +111,7 @@ This emitter emits 'HIDFunctionRequest' events, replacing ipcRenderer.on('HIDFun
 All that's required to initialize the remote is to call `setChannel` with a valid channel object. See below.
 
 ### setChannel (VDI only)
-It's necessary to call this function both the local and remote sides when in a VDI environment. In both cases, the function parameter is an object that contains a `send` function that will send a message over the channel to the far end. The object should also contain a key called `receive` that has a value of `undefined`. The KandyHID SDK will insert its own receive function there. Note this is the same method used to initialize the KandyJS SDK.
+It's necessary to call this function on both the local and remote sides when in a VDI environment. In both cases, the function parameter is an object that contains a `send` function that will send a message over the channel to the far end. The object should also contain a key called `receive` that has a value of `undefined`. The KandyHID SDK will insert its own receive function in its place. Note this is the same method used to initialize the KandyJS SDK.
 
 Calling this function in a desktop environment has no effect.
 
@@ -452,7 +452,7 @@ The kandy-hid channel will remain down and not automatically attempt to reconnec
 kandyHID.on('HIDFunctionRequest', operation => {
   switch (operation) {
     case 'channel_error':
-      console.error('kandy-hid has reported a communication error over the virtual channel);
+      console.error('kandy-hid has reported a communication error over the virtual channel');
       break;
     }
 }
