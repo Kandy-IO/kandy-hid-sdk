@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2.0.0 - 2021-07-30
+
+### Changed
+- Updates the interface for use in Electron's Renderer process, rather than the Main process
+
+### Added
+- Support for VDI Mac configuration
+- Support for the Jabra Evolve2 40
+- Support for the Jabra Speak 750
+
+### Removed
+- Support for the Jabra PRO 9450
+- Support for the Jabra Speak 710
+- `readyToExit` and `prepareToExit` APIs
+- exported constants
+
+### Fixed
+- An issue affecting Hold/Resume functionality on the Jabra PRO 9450 (KAJ-588)
+- A backwards-compatibility issue that will allow hold/resume to function normally if the app developer does not implement "calls_on_hold". See details in [previous versions of the README](https://github.com/Kandy-IO/kandy-hid-sdk/tree/v1.6.0_jan2021#known-issues--limitations) (KAJ-412). It should be noted that if the app developer chooses not to implement "calls_on_hold", depending on how the app is written, it may not be possible for devices to be able to signal a call swap or answer a call while on a call.
+
 ## 1.6.0 - 2021-01-29
 
 ### Removed
@@ -88,4 +108,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Deprecated
 ### Fixed
 ### Security
->
