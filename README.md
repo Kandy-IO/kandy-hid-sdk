@@ -135,7 +135,7 @@ const HIDChannel = {
   receive: undefined
 }
 
-setChannel(localHIDChannel)
+setChannel(HIDChannel)
 
 // handle incoming messages from the far end
 yourReceiveFunction(messageType, ...data) {
