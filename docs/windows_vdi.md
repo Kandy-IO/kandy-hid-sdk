@@ -1,6 +1,6 @@
 # Required Citrix configuration for VDI Windows
 
-Using the kandy-hid SDK in a VDI Windows environment requires that HID devices be "split" and then the HID portion of the device be redrected to the Virtual Machine. Citrix documentation refers to this as "Composite USB device redirection". Citrix's documentation for the Citrix Workspace app for Windows describes the configuration steps.
+Using the kandy-hid SDK in a VDI Windows environment requires that HID devices be "split" and then the HID portion of the device be redrected to the Virtual Machine. Citrix documentation refers to this as "USB Composite device redirection". Citrix's documentation for the Citrix Workspace app for Windows describes the configuration steps.
 
 What follows is a **reference**. For issues, questions, etc. please contact Citrix. 
 
@@ -16,7 +16,8 @@ What follows is a **reference**. For issues, questions, etc. please contact Citr
 ## Group Policies
 Citrix recommends use of Windows Group Policies to apply configuration changes, either locally (i.e. affecting a single PC) or at a domain level.
 
-**Group Policies can currently only be applied to Enterprise or Professional versions of Windows, not Home Editions. At this time, Citrix does not formally support the use of the Citrix Workspace app in Windows Home Edition. Citrix is tracking support for the Workspace app as well as a procedure to perform Composite USB device redirection in Windows Home Editions via RFE ID-011075.**
+**Group Policies can only be applied to Enterprise or Professional versions of Windows, not Home Editions. At this time, Citrix does not formally support the use of the Citrix Workspace app in Windows Home Edition. 
+Citrix is currently evaluating support for Home Editions. A formal tracking number for this activity has been requested of Citrix.**
 
 The following is based Citrix documentation at https://docs.citrix.com/en-us/citrix-workspace-app-for-windows/getting-started.html#group-policy-object-administrative-template
 

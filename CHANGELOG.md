@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2.1.0 - 2021-10-08
+
+### Changed
+- Use of this SDK in a VDI Windows environment now uses WebHID, removing the need for USB Composite device redirection if Kandy Distant VDI for Windows version 1.1.0 or higher is used. If Kandy Distant VDI Driver for Windows is less than version 1.1.0, USB composite device redirection is still required. See instructions in [previous versions of the README](https://github.com/Kandy-IO/kandy-hid-sdk/blob/v2.0.0/README.md#windows-vdi).
+
+### Fixed
+- Known Issue preventing use of the Jabra Speak 750 on Mac Desktop and VDI Mac; vendor ticket 299
+
+### Added
+- Support for the Jabra Speak 750 in Mac desktop environment
+- Support for the Jabra Speak 750 in VDI Mac environment
+- Support for use in apps where Electron context-isolation is used. See `Electron Security` in the README
+
 ## 2.0.0 - 2021-07-30
 
 ### Changed

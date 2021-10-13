@@ -45,7 +45,7 @@ setInterval(() => {
 
 #### Handling the 'call_swap' event in the application
 ```
-ipcRenderer.on('HIDFunctionRequest', (event, operation) => {
+kandyHID.on('HIDFunctionRequest', operation => {
   switch (operation):
     case 'call_swap': {
       const activeCall = findActiveCall()
