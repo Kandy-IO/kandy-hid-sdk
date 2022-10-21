@@ -177,6 +177,7 @@ Parameters
 Type: string
 Returns: boolean
 ```
+****
 
 Allows the app to query kandy-hid whether a device is supported for use or not. Returns true/false.
 
@@ -185,12 +186,14 @@ Example:
 In the Renderer process:
 
 ```
-function maybeSelectMicrophone(deviceObject) {
+function selectMicrophone(deviceObject) {
   const result = kandyHID.isSupportedDevice(deviceObject.label);
 
-  if (result) {
-    kandyHID.selectHIDDevice('microphone', deviceObject);
+  if (!result) {
+    console.log('unsupported device selected...')
   }
+
+  kandyHID.selectHIDDevice('microphone', deviceObject);
 }
 ```
 
@@ -203,6 +206,7 @@ Examples:
 kandyHID.isSupportedDevice('G/N Audio Jabra Speak 750'); // true
 kandyHID.isSupportedDevice('abra Speak 7'); // false
 ```
+Also note that `isSupportedDevice()` should **not** be used to filter devices before selecting them via `selectHIDDevice()`. For proper operation the SDK should be informed when user selections change, whether a supported HID device is selected or not.
 
 ### selectHIDDevice(deviceType, deviceInformation)
 
